@@ -1,9 +1,7 @@
 import random
 import time
-
 import networkx as nx
 import matplotlib.pyplot as plt
-
 from itertools import combinations, groupby
 
 
@@ -12,7 +10,7 @@ def gnp_random_connected_graph(num_of_nodes: int,
                                draw: bool = False) -> list[tuple[int, int]]:
     """
     Generates a random undirected graph, similarly to an Erdős-Rényi
-    graph, but enforcing that the resulting graph is conneted
+    graph, but enforcing that the resulting graph is connected
     """
 
     edges = combinations(range(num_of_nodes), 2)
