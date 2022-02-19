@@ -4,6 +4,7 @@ import prim
 import time
 
 num_of_iterations = 10
+completeness = 1
 nums_of_vertexes = [20, 50, 100, 200, 250, 500, 700]
 # nums_of_vertexes = [10, 15, 20, 50]
 min_prim = []
@@ -13,7 +14,7 @@ for amount in nums_of_vertexes:
     time_holder = []
     for i in range(num_of_iterations):
         start = time.time()
-        prim.step(prim.gnp_random_connected_graph(amount, 1))
+        prim.step(prim.gnp_random_connected_graph(amount, completeness))
         end = time.time()
         time_holder.append(end-start)
     min_time_taken = min(time_holder)
@@ -23,7 +24,7 @@ for amount in nums_of_vertexes:
     time_holder = []
     for i in range(num_of_iterations):
         start = time.time()
-        kruskal.kruskal(kruskal.gnp_random_connected_graph(amount, 1))
+        kruskal.kruskal(kruskal.gnp_random_connected_graph(amount, completeness))
         end = time.time()
         time_holder.append(end-start)
     min_time_taken = min(time_holder)
