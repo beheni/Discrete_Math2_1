@@ -1,6 +1,5 @@
-import pandas as pd
+# import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
 from sklearn.datasets import load_iris
 from sklearn.model_selection import cross_val_score
 from sklearn import tree
@@ -10,14 +9,20 @@ iris = load_iris()
 
 class Node:
 
-    def __init__(self, X, y, gini=0, feature_index=0, threshold=0, left=None, right=None):
+
+    def __init__(self, X, y, depth=0, gini=0, feature_index=0, threshold=0, left=None, right=None):
         self.X = X
         self.y = y
+        self.depth = depth
         self.gini = gini
         self.feature_index = feature_index
         self.threshold = threshold
         self.left = left
         self.right = right
+
+
+    def __str__(self):
+        return f" {self.gini}\n{self.feature_index}\n{self.threshold}\n\n\n\n"
 
 
 class MyDecisionTreeClassifier:
@@ -91,29 +96,28 @@ class MyDecisionTreeClassifier:
                         IG[7] = y_right
         return IG
 
-    def build_tree(self, X, y, depth=0, nodes=[], leaves=[]):
-        if len(set(y)) > 1:
-            if depth <= self.max_depth:
-                split = self.split_data(X, y)
-                if split[0] > 0:
-                    nodes.append(Node(X, y, split[0], split[5], split[4]))
-                    left_son = self.build_tree(split[1], split[6], depth + 1)
-                    right_son = self.build_tree(split[2], split[7], depth + 1)
+    def build_tree(self, node):
+        X = node.X
+        y = node.y
+        depth = node.depth
+        if depth <= self.max_depth:
+            split = self.split_data(X, y)
+            if split[0] > 0:
+                node.left = self.build_tree(Node(X=split[1], y=split[6], gini=split[0], feature_index=split[5], threshold=split[4]))
+                node.right = self.build_tree(Node(X=split[2], y=split[7], gini=split[0], feature_index=split[5], threshold=split[4]))
+        return node
 
-        else:
-            nodes.append(Node(X=X, y=iris.target_names[int(y[0])]))
-            leaves.append(Node(X=X, y=iris.target_names[int(y[0])]))
-        return nodes
 
-    def print_tree(self, X, y, indent=" "):
-        self.root = self.build_tree(X, y)
-        for node in self.root:
-            print(f"{iris.feature_names[node.feature_index]} <= {node.threshold}" + '\n' + f'gini = {node.gini}' + '\n' + f"samples = {len(node.X)}" + '\n' + f"name {node.y}")
-
-    def fit(self, X, y):
-        # basically wrapper for build tree
-
-        pass
+    def fit(self, tree):
+        tr = my_tree.split_data(iris.data, iris.target)
+        t = Node(tr[3], iris.target, 0, tr[0], tr[5], tr[4], left=None, right=None)
+        t = my_tree.build_tree(t)
+        # print(my_tree.fit(t))
+        # print(f"{iris.feature_names[tree.feature_index]} <= {tree.threshold}" + '\n' + f'gini = {tree.gini}' + '\n' + f"samples = {len(tree.X)}" + '\n' + f"name {tree.y}")
+        # tree = tree.right
+        # print(f"{iris.feature_names[tree.feature_index]} <= {tree.threshold}" + '\n' + f'gini = {tree.gini}' + '\n' + f"samples = {len(tree.X)}" + '\n' + f"name {tree.y}")
+        # tree = tree.left
+        # print(f"{iris.feature_names[tree.feature_index]} <= {tree.threshold}" + '\n' + f'gini = {tree.gini}' + '\n' + f"samples = {len(tree.X)}" + '\n' + f"name {tree.y}")
 
     def predict(self, X_test):
         # traverse the tree while there is left node
@@ -122,5 +126,7 @@ class MyDecisionTreeClassifier:
 
         pass
 #
-# my_tree = MyDecisionTreeClassifier(10)
-# print(my_tree.print_tree(iris.data[:-38], iris.target[:-38]))
+my_tree = MyDecisionTreeClassifier(10)
+
+# print(my_tree.build_tree(iris.data[:-38], iris.target[:-38]))
+
