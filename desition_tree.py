@@ -22,7 +22,7 @@ class Node:
 
 
     def __str__(self):
-        return f" {self.gini}\n{self.feature_index}\n{self.threshold}\n\n\n\n"
+        return f" {self.feature_index}"
 
 
 class MyDecisionTreeClassifier:
@@ -108,25 +108,30 @@ class MyDecisionTreeClassifier:
         return node
 
 
-    def fit(self, tree):
+    def fit(self, my_tree):
         tr = my_tree.split_data(iris.data, iris.target)
-        t = Node(tr[3], iris.target, 0, tr[0], tr[5], tr[4], left=None, right=None)
-        t = my_tree.build_tree(t)
-        # print(my_tree.fit(t))
-        # print(f"{iris.feature_names[tree.feature_index]} <= {tree.threshold}" + '\n' + f'gini = {tree.gini}' + '\n' + f"samples = {len(tree.X)}" + '\n' + f"name {tree.y}")
-        # tree = tree.right
-        # print(f"{iris.feature_names[tree.feature_index]} <= {tree.threshold}" + '\n' + f'gini = {tree.gini}' + '\n' + f"samples = {len(tree.X)}" + '\n' + f"name {tree.y}")
-        # tree = tree.left
-        # print(f"{iris.feature_names[tree.feature_index]} <= {tree.threshold}" + '\n' + f'gini = {tree.gini}' + '\n' + f"samples = {len(tree.X)}" + '\n' + f"name {tree.y}")
+        tree_nd_class = Node(tr[3], iris.target, 0, tr[0], tr[5], tr[4], left=None, right=None)
+        tree_dc_class = my_tree.build_tree(tree_nd_class)
+        return tree_dc_class
 
-    def predict(self, X_test):
-        # traverse the tree while there is left node
-        # and return the predicted class for it,
-        # note that X_test can be not only one example
 
-        pass
-#
-my_tree = MyDecisionTreeClassifier(10)
+    def predict(self, tree, x_test, answer, count = 0):
+        try:
+            for i in range(4):
+                if i == tree.feature_index:
+                    if x_test[i] <= int(tree.threshold):
+                        count+=1
+                        return my_tree.predict(tree.left, x_test, answer)
+                    else:
+                        return my_tree.predict(tree.right, x_test, answer)
+        except:
+            if answer == int(tree.y):
+                return answer, "It works!"
+            else:
+                return "False"
 
-# print(my_tree.build_tree(iris.data[:-38], iris.target[:-38]))
-
+if __name__ == "__main__":
+    print(iris.data[7], iris.target[7])
+    my_tree = MyDecisionTreeClassifier(10)
+    tree = my_tree.fit(my_tree)
+    print(my_tree.predict(tree, [5.0, 3.4, 1.5, 0.2], 0))
