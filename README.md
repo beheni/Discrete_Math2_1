@@ -10,6 +10,7 @@ We ran 10 iterations of each algorithm on graphs with 20, 50, 100, 200, 250, 500
 
 
 ## Decision Tree Classifier
+Right [here](https://github.com/beheni/Discrete_Math2_1/blob/viktoria/desition_tree.py)
 
 ## Credits
 - [Viktorya Kocherkevych](https://github.com/ViktoryaK)
